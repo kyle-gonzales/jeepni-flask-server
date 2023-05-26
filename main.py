@@ -38,8 +38,9 @@ def handle_join(room):
 
 
 @socketio.on("leave")
-def handle_leave():
+def handle_leave(driver_id):
     room = session.get("id")
+    emit("remove_pin", driver_id, broadcast=True, to=room, include_self=False)
     leave_room(room)
 
     print(f"\n-----LEAVING ROOM {room}-------\n")
@@ -48,6 +49,11 @@ def handle_leave():
 @socketio.on("message")
 def handle_message(message):
     print("i got a message", str(message))
+
+
+@socketio.on("remove_pin")
+def remove_pin(driverId):
+    print(f"\n---{driverId} is about to leave the room---\n")
 
 
 @socketio.on("update_location")
